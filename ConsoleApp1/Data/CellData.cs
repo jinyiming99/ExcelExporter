@@ -9,6 +9,6 @@ public class CellData
         _txt = txt;
     }
 
-    
+    public static CellData Empty => new CellData(string.Empty);
     
 }

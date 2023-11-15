@@ -1,4 +1,5 @@
 ﻿using ConsoleApp1;
+using ConsoleApp1.NewDatas;
 using NPOI.XSSF.UserModel;
 public class ExcelFile
 {
@@ -17,15 +18,18 @@ public class ExcelFile
           Workbook = new XSSFWorkbook(Path);
      }
 
-     public void LoadClass()
+     public Dictionary<string,ExcelClassData> LoadClass()
      {
+          Dictionary<string,ExcelClassData> compilationsData = new Dictionary<string, ExcelClassData>();
           for (int i = 0; i < Workbook.NumberOfSheets; i++)
           {
-               ClassData data = new ClassData();
+               ExcelClassData data = new ExcelClassData();
                var name = Workbook.GetSheetName(i);
-               data.LoadClass(Workbook.GetSheet(name));
-               ExportData.Instance.Add(name,data);
+               var classData = ClassLoader.LoadClass(Workbook.GetSheet(name));
+               compilationsData.Add(name,classData);
           }
+
+          return compilationsData;
      }
      
 }

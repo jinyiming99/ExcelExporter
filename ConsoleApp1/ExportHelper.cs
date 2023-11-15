@@ -6,47 +6,27 @@ public class ExportHelper
 {
     public static FieldType GetType(CellData data)
     {
-        switch (data.Txt.ToLower())
-        {
-            case "int":
-            case "int32":
-                return FieldType.Int;
-            case "short":
-                return FieldType.Short;
-            case "float":
-                return FieldType.Float;
-            case "string":
-                return FieldType.String;
-            case "bool":
-                return FieldType.Bool;
-            case "list":
-                return FieldType.List;
-            case "dictionary":
-                return FieldType.Dictionary;
-            case "enum":
-                return FieldType.Enum;
-            case "array":
+        
+            if (data.Txt.Equals("int") || data.Txt.Equals("int32"))
+                return FieldType.Struct;
+            else if (data.Txt.Equals("short") )
+                return FieldType.Struct;
+            else if (data.Txt.Equals("float") )
+                return FieldType.Struct;
+            else if (data.Txt.Equals("string") )
+                return FieldType.Struct;
+            else if (data.Txt.Equals("bool") )
+                return FieldType.Struct;
+            else if (data.Txt.Contains("[]") )
                 return FieldType.Array;
-            default:
+            else if (data.Txt.Contains("enum"))
+                return FieldType.Enum;
+            else
             {
-                var b = true;
+                var b = true;//ExportHelper.FindClassName(data.Txt);
                 return b ? FieldType.Class : FieldType.Unkown;
             }
-        }
+        
     }
-
-    public static List<CellData> GetColFromSheet(ISheet sheet,int index)
-    {
-        List<CellData> datas = new List<CellData>();
-        for (int i = sheet.FirstRowNum; i < sheet.LastRowNum; i++)
-        {
-            var cell = sheet.GetRow(i).GetCell(index);
-            if (cell == null )
-                datas.Add(null);
-            else
-                datas.Add(new CellData(cell.ToString()));
-        }
-
-        return datas;
-    }
+    
 }

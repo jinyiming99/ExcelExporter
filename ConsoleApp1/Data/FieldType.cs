@@ -4,13 +4,17 @@ public enum FieldType
 {
     Class,
     Enum,
+    Struct,
+    Array,
+    Unkown
+}
+
+public enum DataType
+{
+    Null,
     Int,
     Short,
     Float,
     String,
     Bool,
-    List,
-    Dictionary,
-    Array,
-    Unkown
 }

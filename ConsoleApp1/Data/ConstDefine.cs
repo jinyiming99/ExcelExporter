@@ -2,6 +2,7 @@
 
 public enum ConstDefine
 {
+    DesLine = 0,
     NameLine = 1,
     TypeLine = 2,
     UseLine = 3,
