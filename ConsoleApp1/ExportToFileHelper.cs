@@ -47,7 +47,7 @@ public static class ExportToFileHelper
         {
             if (field.Value == null)
                 continue;
-            await steam.WriteAsync("{");
+            await steam.WriteAsync("      {");
             await steam.WriteAsync($"{field.Value.Txt}" +","+ $" new {data._name.ToUpperFirst()}()");
             await steam.WriteAsync("{");
             foreach (var f in data._Datas)
@@ -60,6 +60,20 @@ public static class ExportToFileHelper
         }
         await steam.WriteLineAsync("   };");
 
+        await steam.WriteLineAsync($"   public {data._name.ToUpperFirst()} Get({typeName} key)");
+        await steam.WriteLineAsync("   {");
+        await steam.WriteLineAsync("       if (dic.TryGetValue(key, out var value))");
+        await steam.WriteLineAsync("       {");
+        await steam.WriteLineAsync("           return value;");
+        await steam.WriteLineAsync("       }");
+        await steam.WriteLineAsync("       return null;");
+        await steam.WriteLineAsync("   }");
+
+        await steam.WriteLineAsync($"   public List<{data._name.ToUpperFirst()}> GetAll()");
+        await steam.WriteLineAsync("   {");
+        await steam.WriteLineAsync("       return dic.Values.ToList();");
+        await steam.WriteLineAsync("   }");
+        
         
         await steam.WriteLineAsync("}");
         await steam.FlushAsync();
