@@ -10,9 +10,6 @@ public static class ExportToFileHelper
             return;
         string filePath = outPath + "/" + data._name + ".cs";
         var steam = System.IO.File.CreateText(filePath);
-        await steam.WriteLineAsync($"public class {data._name.ToUpperFirst()}");
-        await steam.WriteLineAsync("{");
-
         foreach (var field in data._Datas)
         {
             string str = await field.Value.ClassStr();
@@ -20,6 +17,11 @@ public static class ExportToFileHelper
                 continue;
             await steam.WriteLineAsync($"    {str}");
         }
+        
+        await steam.WriteLineAsync($"public class {data._name.ToUpperFirst()}");
+        await steam.WriteLineAsync("{");
+
+
         
         foreach (var field in data._Datas)
         {

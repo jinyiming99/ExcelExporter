@@ -15,18 +15,7 @@ public class FieldEnumValue : BaseValue
         await writer.WriteLineAsync($"public enum {_enumName.ToUpperFirst()}");
         await writer.WriteLineAsync("{");
 
-        var list = await new Task<List<string>>(() =>
-        {
-            Dictionary<string,int> dic = new Dictionary<string, int>();
-            foreach (var cell in _CellDatas)
-            {
-                if (cell.Value == null) continue;
-                if (string.IsNullOrEmpty(cell.Value.Txt)|| string.IsNullOrWhiteSpace(cell.Value.Txt))
-                    continue;
-                dic.TryAdd(cell.Value.Txt,0);
-            }
-            return dic.Keys.ToList();
-        });
+        var list = await GetList();
         
         foreach (var str in list)
         {
@@ -37,9 +26,29 @@ public class FieldEnumValue : BaseValue
         return writer.ToString();
     }
 
+    public override async Task<string> GetData(int index)
+    {
+        return $"{_name.ToUpperFirst()} = {_enumName.ToUpperFirst()}.{_CellDatas[index].Txt.ToUpperFirst()}";
+    }
+
+    private async Task<List<string>> GetList()
+    {
+        Dictionary<string,int> dic = new Dictionary<string, int>();
+        foreach (var cell in _CellDatas)
+        {
+            if (cell.Value == null) continue;
+            if (string.IsNullOrEmpty(cell.Value.Txt)|| string.IsNullOrWhiteSpace(cell.Value.Txt))
+                continue;
+            dic.TryAdd(cell.Value.Txt,0);
+        }
+        return dic.Keys.ToList();
+    }
+    
+    
+
     public FieldEnumValue(string eName,string name) : base(FieldType.Enum,DataType.Null,name)
     {
         _type = FieldType.Enum;
-        _name = eName;
+        _enumName = eName;
     }
 }
