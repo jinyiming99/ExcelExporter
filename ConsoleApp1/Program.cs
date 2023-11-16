@@ -5,10 +5,66 @@ using ConsoleApp1;
 using ConsoleApp1.NewDatas;
 
 string dir = string.Empty;
+string outDir = string.Empty;
+string nameSpace = string.Empty;
+bool isServer = false;
+bool isClient = false;
+
+bool[] argsCheck = new bool[4];
 if (args.Length > 0)
-    dir = args[1];
-else
+{
+
+    foreach (var arg in args)
+    {
+        if (arg.Contains("--I="))
+        {
+            dir = arg.Replace("--I=", "");
+            argsCheck[0] = true;
+            continue;
+        }
+
+        if (arg.Contains("--O="))
+        {
+            outDir = arg.Replace("--O=", "");
+            argsCheck[1] = true;
+            continue;
+        }
+
+        if (arg.Contains("--P="))
+        {
+            var str = arg.Replace("--P=", "");
+            if (str == "server")
+            {
+                isServer = true;
+            }
+            else if (str == "client")
+            {
+                isClient = true;
+            }
+            argsCheck[2] = true;
+            continue;
+        }
+
+        if (arg.Contains("--N="))
+        {
+            nameSpace = arg.Replace("--N=", "");
+            argsCheck[3] = true;
+            continue;
+        }
+            
+    }
+
+}
+if (!argsCheck[0])
     dir = Directory.GetCurrentDirectory();
+if (!argsCheck[1])
+    outDir = Directory.GetCurrentDirectory();
+if (!argsCheck[2])
+    isClient = true;
+if (!argsCheck[3])
+    nameSpace = "Config";
+
+    
 
 Console.WriteLine($"dir = {dir}");
 string[] files = Directory.GetFiles(dir);
@@ -25,15 +81,14 @@ foreach (string file in files)
     {
         excelData.Add(v.Key,v.Value);
     }
-    
 }
 
 var dic = Check(excelData);
 
 foreach (var v in dic)
 {
-    await ExportToFileHelper.ExportStructFile(dir,v.Value);
-    await ExportToFileHelper.ExportDataFile(dir,v.Value);
+    await ExportToFileHelper.ExportStructFile(outDir,nameSpace,v.Value);
+    await ExportToFileHelper.ExportDataFile(outDir,nameSpace,v.Value);
 }
 
 

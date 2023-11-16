@@ -5,12 +5,6 @@ public class ExcelFile
 {
      private string Path;
      private XSSFWorkbook Workbook;
-     //private Dictionary<string,ClassData> classDatas = new Dictionary<string,ClassData>();
-     public ExcelFile()
-     {
-          
-
-     }
 
      public void LoadFile(string path)
      {

@@ -4,12 +4,14 @@ namespace ConsoleApp1;
 
 public static class ExportToFileHelper
 {
-    public async static Task ExportStructFile(string outPath,ClassData data)
+    public async static Task ExportStructFile(string outPath,string spaceName,ClassData data)
     {
         if (data._Datas.Count == 0)
             return;
         string filePath = outPath + "/" + data._name + ".cs";
         var steam = System.IO.File.CreateText(filePath);
+        steam.WriteLineAsync($"namespace {spaceName}");
+        steam.WriteLineAsync("{");
         foreach (var field in data._Datas)
         {
             string str = await field.Value.ClassStr();
@@ -30,16 +32,19 @@ public static class ExportToFileHelper
         }
         
         await steam.WriteLineAsync("}");
+        await steam.WriteLineAsync("}");
         await steam.FlushAsync();
         steam.Close();
     }
 
-    public async static Task ExportDataFile(string outPath, ClassData data)
+    public async static Task ExportDataFile(string outPath, string spaceName,ClassData data)
     {
         if (data._Datas.Count == 0)
             return;
         string filePath = outPath + "/" + data._name.ToUpperFirst() + "Data.cs";
         var steam = System.IO.File.CreateText(filePath);
+        await steam.WriteLineAsync($"namespace {spaceName}");
+        await steam.WriteLineAsync("{");
         await steam.WriteLineAsync($"public class {data._name.ToUpperFirst()}Data");
         await steam.WriteLineAsync("{");
         var typeName = FieldSturctValue.GetTypeString(data._key._value.DataType);
@@ -80,6 +85,7 @@ public static class ExportToFileHelper
         await steam.WriteLineAsync("   }");
         
         
+        await steam.WriteLineAsync("}");
         await steam.WriteLineAsync("}");
         await steam.FlushAsync();
         steam.Close();
