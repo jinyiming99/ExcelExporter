@@ -28,19 +28,7 @@ public class FieldSturctValue: BaseValue
     {
         if (_CellDatas.TryGetValue(index, out var data))
         {
-            switch (_dataType)
-            {
-                case ConsoleApp1.DataType.String:
-                    return $"{_name.ToUpperFirst()} = \"{data.Txt}\"";
-                default:
-                {
-                    if (string.IsNullOrEmpty(data.Txt))
-                        return $"{_name.ToUpperFirst()} = {await GetDefault(_dataType)}";
-                    return $"{_name.ToUpperFirst()} = {data.Txt}"; 
-                }
-                    
-            }
-            
+            return $"{_name.ToUpperFirst()} = {await GetValueData(data.Txt)}";
         };
         return string.Empty;
     }
@@ -109,7 +97,21 @@ public class FieldSturctValue: BaseValue
                 return "string";
             default:
                 return string.Empty;
-            
         }
+    }
+    public override async Task<string> GetValueData(string txt)
+    {
+        switch (_dataType)
+        {
+            case ConsoleApp1.DataType.String:
+                return $"\"{txt}\"";
+            default:
+            {
+                if (string.IsNullOrEmpty(txt))
+                    return $"{await GetDefault(_dataType)}";
+                return $"{txt}"; 
+            }
+        }
+
     }
 }

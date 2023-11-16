@@ -31,4 +31,9 @@ public class BaseValue
     {
         return string.Empty;
     }
+
+    public virtual async Task<string> GetValueData(string txt)
+    {
+        return txt;
+    }
 }

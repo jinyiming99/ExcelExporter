@@ -33,14 +33,15 @@ public static class FieldDataCreater
             var name = strs.Where(str => !str.Contains("enum") && !string.IsNullOrEmpty(str)).ToArray();
             outData= new FieldEnumValue(name[0],info.Name.Txt);
         }
-        else if (FieldSturctValue.IsStruct(info.Type))
-        {
-            outData= new FieldSturctValue(FieldSturctValue.GetStruct(info.Type.Txt),info.Name.Txt);
-        }
         else if (type.Contains("[]"))
         {
             outData= new FieldArrayData(info.Type,info.Name.Txt);
         }
+        else if (FieldSturctValue.IsStruct(info.Type))
+        {
+            outData= new FieldSturctValue(FieldSturctValue.GetStruct(info.Type.Txt),info.Name.Txt);
+        }
+
         else
         {
             outData= null;

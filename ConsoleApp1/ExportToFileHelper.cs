@@ -50,12 +50,15 @@ public static class ExportToFileHelper
             if (field.Value == null)
                 continue;
             await steam.WriteAsync("      {");
-            await steam.WriteAsync($"{field.Value.Txt}" +","+ $" new {data._name.ToUpperFirst()}()");
+            await steam.WriteAsync($"{await data._key._value.GetValueData(field.Value.Txt)}" +","+ $" new {data._name.ToUpperFirst()}()");
             await steam.WriteAsync("{");
+            int index = 0;
             foreach (var f in data._Datas)
             {
+                if (index++ != 0)
+                    await steam.WriteAsync(",");
                 var str = await f.Value.GetData(field.Key);
-                await steam.WriteAsync($"{str},");
+                await steam.WriteAsync($"{str}");
             }
             await steam.WriteAsync("}");
             await steam.WriteLineAsync("},");

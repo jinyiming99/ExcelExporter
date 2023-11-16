@@ -9,6 +9,7 @@ public class FieldArrayData : BaseValue
     public FieldArrayData(CellData typeData,string name):base(FieldType.Array,DataType.Null,name)
     {
         var type = typeData.Txt.Replace("[]", "");
+        //{a:int,b:string}[]
         if (type.Contains('{'))
         {
             type = type.Replace("{", "");
@@ -28,6 +29,8 @@ public class FieldArrayData : BaseValue
         else
         {
             _dataType = FieldSturctValue.GetStruct(type);
+            _values = new List<FieldSturctValue>();
+            _values.Add(new FieldSturctValue(_dataType,string.Empty));
             _isMultiType = false;
         }
     }
@@ -37,15 +40,15 @@ public class FieldArrayData : BaseValue
         if (_isMultiType)
         {
             StringWriter writer = new StringWriter();
-            await writer.WriteLineAsync($"    public class CustomAttr{_index}");
-            await writer.WriteLineAsync("    {");
+            await writer.WriteLineAsync($"public class CustomAttr{_index}");
+            await writer.WriteLineAsync("{");
         
             foreach (var str in _values)
             {
-                await writer.WriteLineAsync($"        public {FieldSturctValue.GetTypeString(str.DataType)} {str.Name};");
+                await writer.WriteLineAsync($"   public {FieldSturctValue.GetTypeString(str.DataType)} {str.Name};");
             }
         
-            await writer.WriteLineAsync("    }");
+            await writer.WriteLineAsync("}");
             return writer.ToString();
         }
         else
@@ -70,7 +73,31 @@ public class FieldArrayData : BaseValue
     {
         if (_isMultiType)
         {
-            return $"var {_name} = new List<CustomAttr{index}>();";
+            StringWriter writer = new StringWriter();
+            await writer.WriteAsync($"{_name} = new List<CustomAttr{_index}>" + "{");
+            //1,a:2,b
+            //foreach (var kv in _CellDatas)
+            {
+                var kv = _CellDatas[index];
+                var arrs = kv.Txt.Split(":");
+                for (int i = 0; i < arrs.Length; i++)
+                {
+                    if (i != 0)
+                        await writer.WriteAsync(",");
+                    await writer.WriteAsync($"new CustomAttr{_index}"+"{");
+                    var values = arrs[i].Split(",");
+                    for (int index1 = 0; index1 < values.Length; index1++)
+                    {
+                        var fieldInfo = _values[index1];
+                        if (index1 != 0)
+                            await writer.WriteAsync(",");
+                        await writer.WriteAsync($"{fieldInfo.Name} ={await fieldInfo.GetValueData(values[index1])}");
+                    }
+                    await writer.WriteAsync("}");
+                }
+            }
+            await writer.WriteAsync("},");
+            return writer.ToString();
         }
         else
         {
@@ -82,7 +109,7 @@ public class FieldArrayData : BaseValue
                 {
                     if (!string.IsNullOrEmpty(str))
                         str += ",";
-                    str += $"{arr}" ;
+                    str += $"{await _values[0].GetValueData(arr)}" ;
                 }
                 
             }

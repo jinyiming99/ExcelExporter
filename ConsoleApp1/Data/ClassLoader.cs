@@ -7,10 +7,12 @@ public static class ClassLoader
     public static ExcelClassData LoadClass(ISheet sheet)
     {
         ExcelClassData outData = new();
-        for (int i = sheet.FirstRowNum; i < sheet.LastRowNum; i++)
+        for (int i = 0; i < 255; i++)
         {
             
             var list = GetColFromSheet(sheet,i);
+            if (list.Count == 0)
+                break;
             var info = FieldLoader.LoadField(list);
             
             if (info is not null)
@@ -27,7 +29,7 @@ public static class ClassLoader
     private static List<CellData> GetColFromSheet(ISheet sheet,int index)
     {
         List<CellData> datas = new List<CellData>();
-        for (int i = sheet.FirstRowNum; i < sheet.LastRowNum; i++)
+        for (int i = sheet.FirstRowNum; i <= sheet.LastRowNum; i++)
         {
             var cell = sheet.GetRow(i).GetCell(index);
             if (cell == null )
