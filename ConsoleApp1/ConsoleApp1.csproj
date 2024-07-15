@@ -7,6 +7,10 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <DefineConstants>TRACE;LOG_OUT</DefineConstants>
+    </PropertyGroup>
+
     <ItemGroup>
       <PackageReference Include="NPOI" Version="2.6.2" />
     </ItemGroup>

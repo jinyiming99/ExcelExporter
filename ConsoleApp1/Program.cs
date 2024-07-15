@@ -2,72 +2,21 @@
 
 using System.IO;
 using ConsoleApp1;
+using ConsoleApp1.Config;
 using ConsoleApp1.NewDatas;
+using GameFrameWork.DebugTools;
 
-string dir = string.Empty;
-string outDir = string.Empty;
-string nameSpace = string.Empty;
-bool isServer = false;
-bool isClient = false;
-
-bool[] argsCheck = new bool[4];
-if (args.Length > 0)
+string path = Directory.GetCurrentDirectory();
+string dir = Path.Combine(path, "Config.txt");
+var config = GlobalConfig.Create<GlobalConfig>(dir);
+if (config == null)
 {
-
-    foreach (var arg in args)
-    {
-        if (arg.Contains("--I="))
-        {
-            dir = arg.Replace("--I=", "");
-            argsCheck[0] = true;
-            continue;
-        }
-
-        if (arg.Contains("--O="))
-        {
-            outDir = arg.Replace("--O=", "");
-            argsCheck[1] = true;
-            continue;
-        }
-
-        if (arg.Contains("--P="))
-        {
-            var str = arg.Replace("--P=", "");
-            if (str == "server")
-            {
-                isServer = true;
-            }
-            else if (str == "client")
-            {
-                isClient = true;
-            }
-            argsCheck[2] = true;
-            continue;
-        }
-
-        if (arg.Contains("--N="))
-        {
-            nameSpace = arg.Replace("--N=", "");
-            argsCheck[3] = true;
-            continue;
-        }
-            
-    }
-
+    ConfigFile.CreateRaw<GlobalConfig>(dir);
+    return;
 }
-if (!argsCheck[0])
-    dir = Directory.GetCurrentDirectory();
-if (!argsCheck[1])
-    outDir = Directory.GetCurrentDirectory();
-if (!argsCheck[2])
-    isClient = true;
-if (!argsCheck[3])
-    nameSpace = "Config";
 
-    
-
-Console.WriteLine($"dir = {dir}");
-string[] files = Directory.GetFiles(dir);
+DebugHelper.Log($"dir = {config._inPath}");
+string[] files = Directory.GetFiles(config._inPath);
 files = files.Where(str =>Path.GetExtension(str).EndsWith(".xlsx")).ToArray();
 
 ExcelData excelData = new ();
@@ -87,13 +36,12 @@ var dic = Check(excelData);
 
 foreach (var v in dic)
 {
-    await ExportToFileHelper.ExportStructFile(outDir,nameSpace,v.Value);
-    await ExportToFileHelper.ExportDataFile(outDir,nameSpace,v.Value);
+    await ExportToFileHelper.ExportStructFile(config._outPath,config._nameSpace,v.Value);
+    await ExportToFileHelper.ExportDataFile(config._outPath,config._nameSpace,v.Value);
 }
 
 
 Console.WriteLine("work done!");
-
 
 Dictionary<string,ClassData> Check(ExcelData data)
 {
