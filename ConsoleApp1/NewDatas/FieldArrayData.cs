@@ -4,16 +4,21 @@ public class FieldArrayData : BaseValue
 {
     public List<FieldSturctValue> _values;
     private bool _isMultiType;
-
+    private static int Count = 0;
     private int _index;
     public FieldArrayData(CellData typeData,string name):base(FieldType.Array,DataType.Null,name)
     {
-        var type = typeData.Txt.Replace("[]", "");
+        _index = Count++;
+        string type = typeData.Txt;
+        if (type.Contains("arr:") )
+            type = typeData.Txt.Replace("arr:", "");
+        else if (type.Contains("json:"))
+            type = typeData.Txt.Replace("json:", "");
         //{a:int,b:string}[]
-        if (type.Contains('{'))
+        if (type.Contains('['))
         {
-            type = type.Replace("{", "");
-            type = type.Replace("}", "");
+            type = type.Replace("[", "");
+            type = type.Replace("]", "");
             var strs = type.Split(',');
             _values = new List<FieldSturctValue>(strs.Length);
             foreach (var str in strs)
@@ -75,11 +80,18 @@ public class FieldArrayData : BaseValue
         {
             StringWriter writer = new StringWriter();
             await writer.WriteAsync($"{_name} = new List<CustomAttr{_index}>" + "{");
+            if (_CellDatas == null)
+            {
+                Console.WriteLine($"{_name} _CellDatas is null");
+            }
             //1,a:2,b
             //foreach (var kv in _CellDatas)
             {
                 var kv = _CellDatas[index];
-                var arrs = kv.Txt.Split(":");
+                var tempStr = kv.Txt.Replace("[", "");
+                tempStr = tempStr.Replace("]", "");
+                var arrs = tempStr.Split(":");
+                
                 for (int i = 0; i < arrs.Length; i++)
                 {
                     if (i != 0)
@@ -96,15 +108,16 @@ public class FieldArrayData : BaseValue
                     await writer.WriteAsync("}");
                 }
             }
-            await writer.WriteAsync("},");
+            await writer.WriteAsync("}");
             return writer.ToString();
         }
         else
         {
+            ///数组分裂符号;
             string str = string.Empty;
             if (_CellDatas.TryGetValue(index, out var data))
             {
-                var arrs = data.Txt.Split(":");
+                var arrs = data.Txt.Split(";");
                 foreach (var arr in arrs)
                 {
                     if (!string.IsNullOrEmpty(str))

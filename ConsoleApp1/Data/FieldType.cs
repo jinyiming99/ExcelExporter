@@ -15,6 +15,7 @@ public enum DataType
     Int,
     Short,
     Float,
+    Double,
     String,
     Bool,
 }

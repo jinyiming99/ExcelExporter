@@ -14,6 +14,8 @@ public class FieldSturctValue: BaseValue
                 return $"public bool {_name.ToUpperFirst()};";
             case DataType.Float:
                 return $"public float {_name.ToUpperFirst()};";
+            case DataType.Double:
+                return $"public double {_name.ToUpperFirst()};";
             case DataType.Int:
                 return $"public int {_name.ToUpperFirst()};";
             case DataType.Short:
@@ -29,7 +31,11 @@ public class FieldSturctValue: BaseValue
         if (_CellDatas.TryGetValue(index, out var data))
         {
             return $"{_name.ToUpperFirst()} = {await GetValueData(data.Txt)}";
-        };
+        }
+        else
+        {
+            return $"{_name.ToUpperFirst()} = {await GetDefault(_dataType)}";
+        }
         return string.Empty;
     }
 
@@ -42,6 +48,8 @@ public class FieldSturctValue: BaseValue
             case DataType.Float:
                 return "0";
             case DataType.Int:
+                return "0";
+            case DataType.Double:
                 return "0";
             case DataType.Short:
                 return "0";
@@ -60,6 +68,8 @@ public class FieldSturctValue: BaseValue
             return true;
         else if (Type.Txt.Equals("float") )
             return true;
+        else if (Type.Txt.Equals("double") )
+            return true;
         else if (Type.Txt.Equals("string") )
             return true;
         else if (Type.Txt.Equals("bool") )
@@ -74,6 +84,8 @@ public class FieldSturctValue: BaseValue
             return DataType.Short;
         else if (Type.Equals("float") )
             return DataType.Float;
+        else if (Type.Equals("double") )
+            return DataType.Double;
         else if (Type.Equals("string") )
             return DataType.String;
         else if (Type.Equals("bool") )
@@ -93,6 +105,8 @@ public class FieldSturctValue: BaseValue
                 return "int";
             case DataType.Short:
                 return "short";
+            case DataType.Double:
+                return "double";
             case DataType.String:
                 return "string";
             default:

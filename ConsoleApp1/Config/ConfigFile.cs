@@ -8,9 +8,12 @@ public abstract class ConfigFile
 
     public static T Create<T>(string path) where T : ConfigFile, new()
     {
-        
+
         if (!File.Exists(path))
+        {
+            Console.WriteLine($"{path} is not exist");
             return null;
+        }
         
         T file = new T();
         using (StreamReader reader = new StreamReader(path))
@@ -21,8 +24,9 @@ public abstract class ConfigFile
                 var str = reader.ReadLine();
                 lines.Add(str);
             }
-            if (!file.SetData(lines))
-                return null;
+
+            file.SetData(lines);
+            file.CheckData();
         }
         return file;
     }
@@ -45,8 +49,11 @@ public abstract class ConfigFile
             if (arr.Length != 2 || string.IsNullOrEmpty(arr[1]))
             {
                 if (string.IsNullOrEmpty(arr[1]))
+                {
                     DebugHelper.LogError($"${arr[0]} config is empty");
-                return false;
+                    return false;
+                }
+                
             }
             _dic.Add(arr[0],arr[1]);
         }

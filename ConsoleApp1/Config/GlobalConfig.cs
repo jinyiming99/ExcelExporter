@@ -11,12 +11,14 @@ public class GlobalConfig : ConfigFile
     {
         if (_dic.TryGetValue("inPath", out _inPath) == false)
         {
-            _inPath = Directory.GetCurrentDirectory();
+            if (string.IsNullOrEmpty(_inPath))
+                _inPath = Directory.GetCurrentDirectory();
         } 
         
         if (_dic.TryGetValue("outPath", out _outPath) == false)
         {
-            _outPath = Directory.GetCurrentDirectory();
+            if (string.IsNullOrEmpty(_outPath))
+                _outPath = Directory.GetCurrentDirectory();
         } 
         if (_dic.TryGetValue("isClient", out var client))
         {
@@ -29,7 +31,8 @@ public class GlobalConfig : ConfigFile
         } 
         if (_dic.TryGetValue("nameSpace", out _nameSpace) == false)
         {
-            _nameSpace = "Config";
+            if (string.IsNullOrEmpty(_nameSpace))
+                _nameSpace = "Config";
         } 
     }
 

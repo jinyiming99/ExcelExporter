@@ -2,10 +2,11 @@
 
 public enum ConstDefine
 {
-    DesLine = 0,
     NameLine = 1,
-    TypeLine = 2,
+    DesLine = 2,
+    KeyLine = 0,
     UseLine = 3,
-    KeyLine = 4,
+    
+    TypeLine = 4,
     DataLine = 5,
 }

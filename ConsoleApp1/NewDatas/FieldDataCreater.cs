@@ -4,7 +4,7 @@ public static class FieldDataCreater
 {
     public static FieldData Creater(ExcelFieldData excelData)
     {
-        if (excelData == null)
+        if (excelData == null || excelData._info == null || excelData._datas == null)
             return null;
         if (IsUse(excelData._info.Use))
         {
@@ -12,7 +12,7 @@ public static class FieldDataCreater
             data._client = IsClient(excelData._info.Use);
             data._server = IsServer(excelData._info.Use);
             data._isKey = IsKey(excelData._info.Key);
-            data._name = excelData._info.Name.Txt;
+            data._name = excelData._info?.Name?.Txt;
             data._des = excelData._info.Des.Txt;
             data._value = CreateValue(excelData._info,excelData._datas);
             return data;
@@ -27,19 +27,22 @@ public static class FieldDataCreater
     {
         string type = info.Type.Txt.ToLower();
         BaseValue outData = null;
+        Console.WriteLine($"type:{type}");
+        Console.WriteLine($"info.des:{info.Des.Txt}");
         if (type.Contains("enum"))
         {
             var strs = type.Split(":");
             var name = strs.Where(str => !str.Contains("enum") && !string.IsNullOrEmpty(str)).ToArray();
             outData= new FieldEnumValue(name[0],info.Name.Txt);
         }
-        else if (type.Contains("[]"))
+        else if (type.Contains("arr:") || type.Contains("json:"))
         {
             outData= new FieldArrayData(info.Type,info.Name.Txt);
         }
         else if (FieldSturctValue.IsStruct(info.Type))
         {
-            outData= new FieldSturctValue(FieldSturctValue.GetStruct(info.Type.Txt),info.Name.Txt);
+            var dType = FieldSturctValue.GetStruct(type);
+            outData= new FieldSturctValue(dType,info.Name.Txt);
         }
 
         else
@@ -51,14 +54,19 @@ public static class FieldDataCreater
             outData._CellDatas = cellDatas;
         return outData;
     }
-    
-    private static bool IsKey(CellData Key) => Key.Txt.ToLower().Equals("unique");
-    
-    private static bool IsClient(CellData Use) => Use.Txt.ToLower().Contains("c");
 
-    private static bool IsServer(CellData Use)=> Use.Txt.ToLower().Contains("s");
+    /// <summary>
+    /// 判断是否是关键字段
+    /// </summary>
+    /// <param name="Key"></param>
+    /// <returns></returns>
+    private static bool IsKey(CellData Key) => Key.Txt.ToLower().Equals("1");//Key.Txt.ToLower().Equals("unique");
     
-    private static bool IsUse(CellData Use) => Use.Txt.ToLower().Contains("c") || Use.Txt.ToLower().Contains("s");
+    private static bool IsClient(CellData Use) => Use.Txt.ToLower().Contains("client") || Use.Txt.ToLower().Contains("all");
+
+    private static bool IsServer(CellData Use)=> Use.Txt.ToLower().Contains("server")  || Use.Txt.ToLower().Contains("all");
+    
+    private static bool IsUse(CellData Use) => Use.Txt.ToLower().Contains("client") || Use.Txt.ToLower().Contains("server") || Use.Txt.ToLower().Contains("all");
 
  
 }

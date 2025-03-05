@@ -7,6 +7,8 @@ public static class FieldLoader
     public static FieldCellInfo? LoadField(List<CellData> row)
     {
         FieldCellInfo data = new FieldCellInfo();
+        if (row.Count < (int)ConstDefine.DataLine)
+            return null;
         var cell = row[(int)ConstDefine.UseLine];
         if (cell == null)
             return null;

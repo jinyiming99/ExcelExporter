@@ -8,6 +8,7 @@ using GameFrameWork.DebugTools;
 
 string path = Directory.GetCurrentDirectory();
 string dir = Path.Combine(path, "Config.txt");
+Console.WriteLine($"dir = {dir}" );
 var config = GlobalConfig.Create<GlobalConfig>(dir);
 if (config == null)
 {

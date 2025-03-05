@@ -5,11 +5,12 @@ public class ExcelFile
 {
      private string Path;
      private XSSFWorkbook Workbook;
-
+     private XSSFFormulaEvaluator evaluator;
      public void LoadFile(string path)
      {
           Path = path;
           Workbook = new XSSFWorkbook(Path);
+          evaluator = new XSSFFormulaEvaluator(Workbook);
      }
 
      public Dictionary<string,ExcelClassData> LoadClass()
@@ -19,7 +20,7 @@ public class ExcelFile
           {
                ExcelClassData data = new ExcelClassData();
                var name = Workbook.GetSheetName(i);
-               var classData = ClassLoader.LoadClass(Workbook.GetSheet(name));
+               var classData = ClassLoader.LoadClass(Workbook.GetSheet(name),evaluator);
                compilationsData.Add(name,classData);
           }
 
