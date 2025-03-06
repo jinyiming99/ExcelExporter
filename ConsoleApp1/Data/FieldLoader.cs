@@ -27,6 +27,8 @@ public static class FieldLoader
 
         for (int i = (int)ConstDefine.DataLine; i < row.Count; i++)
         {
+            if (row[i] == null)
+                continue;
             outData.Add(i, row[i]);
         }
         

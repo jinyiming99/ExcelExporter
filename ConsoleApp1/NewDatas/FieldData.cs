@@ -4,6 +4,7 @@ public class FieldData
 {
     public string _des;
     public string _name;
+    public string _className;
     public bool _server;
     public bool _client;
     public bool _isKey;

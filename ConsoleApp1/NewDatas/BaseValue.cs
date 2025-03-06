@@ -9,12 +9,16 @@ public class BaseValue
     public DataType DataType => _dataType;
     protected string _name;
     public string Name => _name;
+
+    protected string _className;
+    public string ClassName => _className;
     
     public Dictionary<int, CellData> _CellDatas;
-    public BaseValue(FieldType fType,DataType dType,string name)
+    public BaseValue(FieldType fType,DataType dType,string name,string className)
     {
         _type = fType;
         _dataType = dType;
+        _className = className;
         _name = name.ToUpperFirst();
     }
 

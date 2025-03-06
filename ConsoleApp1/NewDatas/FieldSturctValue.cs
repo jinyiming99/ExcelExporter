@@ -2,7 +2,7 @@
 
 public class FieldSturctValue: BaseValue
 { 
-    public FieldSturctValue(DataType dType,string name) : base(FieldType.Struct,dType,name)
+    public FieldSturctValue(DataType dType,string name,string className) : base(FieldType.Struct,dType,name,className)
     {
         _type = FieldType.Struct;
     }

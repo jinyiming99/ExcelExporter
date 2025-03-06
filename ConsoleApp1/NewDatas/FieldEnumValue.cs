@@ -46,7 +46,7 @@ public class FieldEnumValue : BaseValue
     
     
 
-    public FieldEnumValue(string eName,string name) : base(FieldType.Enum,DataType.Null,name)
+    public FieldEnumValue(string eName,string name,string className) : base(FieldType.Enum,DataType.Null,name,className)
     {
         _type = FieldType.Enum;
         _enumName = eName;

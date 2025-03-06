@@ -4,11 +4,13 @@ using NPOI.XSSF.UserModel;
 public class ExcelFile
 {
      private string Path;
+     private string Name;
      private XSSFWorkbook Workbook;
      private XSSFFormulaEvaluator evaluator;
      public void LoadFile(string path)
      {
           Path = path;
+          Name = System.IO.Path.GetFileNameWithoutExtension(path);
           Workbook = new XSSFWorkbook(Path);
           evaluator = new XSSFFormulaEvaluator(Workbook);
      }
@@ -16,14 +18,11 @@ public class ExcelFile
      public Dictionary<string,ExcelClassData> LoadClass()
      {
           Dictionary<string,ExcelClassData> compilationsData = new Dictionary<string, ExcelClassData>();
-          for (int i = 0; i < Workbook.NumberOfSheets; i++)
-          {
-               ExcelClassData data = new ExcelClassData();
-               var name = Workbook.GetSheetName(i);
-               var classData = ClassLoader.LoadClass(Workbook.GetSheet(name),evaluator);
-               compilationsData.Add(name,classData);
-          }
 
+
+          var name = Workbook.GetSheetName(0);
+          var classData = ClassLoader.LoadClass(Workbook.GetSheet(name),evaluator);
+          compilationsData.Add(Name,classData);
           return compilationsData;
      }
      

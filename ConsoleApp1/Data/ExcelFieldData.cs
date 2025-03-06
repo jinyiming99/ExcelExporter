@@ -9,16 +9,6 @@ public class FieldCellInfo
     public CellData Type;
     public CellData Use;
     public CellData Key;
-
-
-}
-public class FieldInfo
-{
-    public string FieldName;
-    public string Type;
-    
-    public string TypeName;
-    public FieldType FieldType;
 }
 
 public class ExcelFieldData

@@ -18,7 +18,7 @@ if (config == null)
 
 DebugHelper.Log($"dir = {config._inPath}");
 string[] files = Directory.GetFiles(config._inPath);
-files = files.Where(str =>Path.GetExtension(str).EndsWith(".xlsx")).ToArray();
+files = files.Where(str =>Path.GetExtension(str).EndsWith(".xlsx") || Path.GetExtension(str).EndsWith(".xls") || Path.GetExtension(str).EndsWith(".xlsm")).ToArray();
 
 ExcelData excelData = new ();
 
@@ -41,6 +41,7 @@ foreach (var v in dic)
     await ExportToFileHelper.ExportDataFile(config._outPath,config._nameSpace,v.Value);
 }
 
+await ExportToFileHelper.ExportAllConfigFile(config._outPath,config._nameSpace,dic.Keys.ToList());
 
 Console.WriteLine("work done!");
 
@@ -54,7 +55,7 @@ Dictionary<string,ClassData> Check(ExcelData data)
         classData._name = classInfo.Key.Split("%")[0];
         foreach (var fieldInfo in classInfo.Value._fields)
         {
-            var fieldData = FieldDataCreater.Creater(fieldInfo);
+            var fieldData = FieldDataCreater.Creater(fieldInfo,classInfo.Key);
             if (fieldData == null)
             {
                 Console.WriteLine($"field is null {fieldInfo._info.Des.Txt}");

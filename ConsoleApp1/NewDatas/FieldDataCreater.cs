@@ -2,7 +2,7 @@
 
 public static class FieldDataCreater
 {
-    public static FieldData Creater(ExcelFieldData excelData)
+    public static FieldData Creater(ExcelFieldData excelData,string className)
     {
         if (excelData == null || excelData._info == null || excelData._datas == null)
             return null;
@@ -12,9 +12,10 @@ public static class FieldDataCreater
             data._client = IsClient(excelData._info.Use);
             data._server = IsServer(excelData._info.Use);
             data._isKey = IsKey(excelData._info.Key);
+            data._className = className;
             data._name = excelData._info?.Name?.Txt;
             data._des = excelData._info.Des.Txt;
-            data._value = CreateValue(excelData._info,excelData._datas);
+            data._value = CreateValue(excelData._info,excelData._datas,className);
             return data;
         }
         else
@@ -23,7 +24,7 @@ public static class FieldDataCreater
         }
     }
 
-    private static BaseValue CreateValue(FieldCellInfo info,Dictionary<int, CellData> cellDatas)
+    private static BaseValue CreateValue(FieldCellInfo info,Dictionary<int, CellData> cellDatas,string className)
     {
         string type = info.Type.Txt.ToLower();
         BaseValue outData = null;
@@ -33,16 +34,16 @@ public static class FieldDataCreater
         {
             var strs = type.Split(":");
             var name = strs.Where(str => !str.Contains("enum") && !string.IsNullOrEmpty(str)).ToArray();
-            outData= new FieldEnumValue(name[0],info.Name.Txt);
+            outData= new FieldEnumValue(name[0],info.Name.Txt,className);
         }
         else if (type.Contains("arr:") || type.Contains("json:"))
         {
-            outData= new FieldArrayData(info.Type,info.Name.Txt);
+            outData= new FieldArrayData(info.Type,info.Name.Txt,className);
         }
         else if (FieldSturctValue.IsStruct(info.Type))
         {
             var dType = FieldSturctValue.GetStruct(type);
-            outData= new FieldSturctValue(dType,info.Name.Txt);
+            outData= new FieldSturctValue(dType,info.Name.Txt,className);
         }
 
         else

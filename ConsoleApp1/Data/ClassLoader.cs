@@ -91,11 +91,4 @@ public static class ClassLoader
             return string.Empty;
         return cell.ToString();
     }
-    
-    private static void Check(ExcelClassData data)
-    {
-        if (data == null)
-            return;
-        
-    }
 }
