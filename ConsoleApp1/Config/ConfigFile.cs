@@ -46,15 +46,6 @@ public abstract class ConfigFile
         foreach (var arg in args)
         {
             var arr = arg.Split('=');
-            if (arr.Length != 2 || string.IsNullOrEmpty(arr[1]))
-            {
-                if (string.IsNullOrEmpty(arr[1]))
-                {
-                    DebugHelper.LogError($"${arr[0]} config is empty");
-                    return false;
-                }
-                
-            }
             _dic.Add(arr[0],arr[1]);
         }
 

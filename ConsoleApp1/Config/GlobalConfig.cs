@@ -22,16 +22,24 @@ public class GlobalConfig : ConfigFile
         } 
         if (_dic.TryGetValue("isClient", out var client))
         {
-            _isClient = bool.Parse(client);
+            if (!string.IsNullOrEmpty(client))
+            {
+                if (!bool.TryParse(client, out _isClient))
+                    Console.WriteLine("isClient参数错误");
+            }
         } 
         
         if (_dic.TryGetValue("isServer", out var server))
         {
-            _isServer = bool.Parse(server);
+            if (!string.IsNullOrEmpty(server))
+            {
+                if (!bool.TryParse(server, out _isServer))
+                    Console.WriteLine("isServer参数错误");
+            }
         } 
-        if (_dic.TryGetValue("nameSpace", out _nameSpace) == false)
+        if (_dic.TryGetValue("nameSpace", out _nameSpace))
         {
-            if (string.IsNullOrEmpty(_nameSpace))
+            if (string.IsNullOrEmpty(_nameSpace) || string.IsNullOrWhiteSpace(_nameSpace))
                 _nameSpace = "Config";
         } 
     }
