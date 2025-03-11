@@ -13,7 +13,7 @@ public class ExportHelper
                 return FieldType.Struct;
             else if (data.Txt.Equals("float") )
                 return FieldType.Struct;
-            else if (data.Txt.Equals("string") )
+            else if (data.Txt.Equals("string") || data.Txt.Equals("str"))
                 return FieldType.Struct;
             else if (data.Txt.Equals("bool") )
                 return FieldType.Struct;
