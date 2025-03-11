@@ -30,7 +30,7 @@ public class FieldArrayData : BaseValue
             _isStruct = true;
         type = type.Replace("[", "");
         type = type.Replace("]", "");
-        Console.WriteLine($"FieldArrayData orgin {typeData.Txt } ; type:{type}");
+        //Console.WriteLine($"FieldArrayData orgin {typeData.Txt } ; type:{type}");
         //{a:int,b:string}[]
         if (_isStruct)
         {
@@ -44,6 +44,7 @@ public class FieldArrayData : BaseValue
                 _values.Add(new FieldSturctValue(FieldSturctValue.GetStruct(keyType),keyName,className));
             }
 
+            _dataType = DataType.Struct;
             _isMultiType = true;
         }
         else
@@ -116,11 +117,11 @@ public class FieldArrayData : BaseValue
                     if (i != 0)
                         await writer.WriteAsync(",");
                     await writer.WriteAsync($"new {_className.ToUpperFirst()}Config.{_name.ToUpperFirst()}CustomAttr"+"{");
-                    Console.WriteLine(arrs[i]);
+                    //Console.WriteLine(arrs[i]);
                     var values = arrs[i].Split(",");
                     for (int index1 = 0; index1 < values.Length; index1++)
                     {
-                        Console.WriteLine($"{_className.ToUpperFirst()} {_name.ToUpperFirst()}  {index1} values[index1] =  {values[index1]}");
+                        //Console.WriteLine($"{_className.ToUpperFirst()} {_name.ToUpperFirst()}  {index1} values[index1] =  {values[index1]}");
                         if (string.IsNullOrEmpty(values[index1]))
                             continue;
                         var fieldInfo = _values[index1];
@@ -140,10 +141,6 @@ public class FieldArrayData : BaseValue
             string str = string.Empty;
             if (_CellDatas.TryGetValue(index, out var data))
             {
-                if (data == null)
-                    Console.WriteLine($"data is null");
-                if (string.IsNullOrEmpty(data.Txt))
-                    Console.WriteLine($"data txt is empty");
                 var arrs = data.Txt.Split(";");
                 foreach (var arr in arrs)
                 {

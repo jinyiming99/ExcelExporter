@@ -16,6 +16,8 @@ public static class FieldDataCreater
             data._name = excelData._info?.Name?.Txt;
             data._des = excelData._info.Des.Txt;
             data._value = CreateValue(excelData._info,excelData._datas,className);
+            if (data._value == null)
+                return null;
             return data;
         }
         else
@@ -28,8 +30,8 @@ public static class FieldDataCreater
     {
         string type = info.Type.Txt.ToLower();
         BaseValue outData = null;
-        Console.WriteLine($"type:{type}");
-        Console.WriteLine($"info.des:{info.Des.Txt}");
+        //Console.WriteLine($"type:{type}");
+        //Console.WriteLine($"info.des:{info.Des.Txt}");
         if (type.Contains("enum"))
         {
             var strs = type.Split(":");
@@ -39,6 +41,8 @@ public static class FieldDataCreater
         else if (type.Contains("arr:") || type.Contains("json:"))
         {
             outData= new FieldArrayData(info.Type,info.Name.Txt,className);
+            if (outData.DataType == DataType.Null)
+                outData = null;
         }
         else if (FieldSturctValue.IsStruct(info.Type))
         {

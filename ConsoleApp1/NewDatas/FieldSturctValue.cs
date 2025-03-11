@@ -70,10 +70,11 @@ public class FieldSturctValue: BaseValue
             return true;
         else if (Type.Txt.Equals("double") )
             return true;
-        else if (Type.Txt.Equals("string") )
+        else if (Type.Txt.Equals("string") || Type.Txt.Equals("str"))
             return true;
         else if (Type.Txt.Equals("bool") )
             return true;
+        Console.WriteLine($"未知类型{Type.Txt}");
         return false;
     }
     public static DataType GetStruct(string Type)
@@ -86,10 +87,12 @@ public class FieldSturctValue: BaseValue
             return DataType.Float;
         else if (Type.Equals("double") )
             return DataType.Double;
-        else if (Type.Equals("string") )
+        else if (Type.Equals("string") || Type.Equals("str"))
             return DataType.String;
-        else if (Type.Equals("bool") )
+        else if (Type.Equals("bool"))
             return DataType.Bool;
+        else
+            Console.WriteLine($"未知类型 {Type}");
         return DataType.Null;
     }
 
@@ -118,7 +121,11 @@ public class FieldSturctValue: BaseValue
         switch (_dataType)
         {
             case ConsoleApp1.DataType.String:
+            {
+                if (txt.Contains("\n"))
+                    return $"\"{txt.Replace("\n", "\\n")}\"";
                 return $"\"{txt}\"";
+            }
             default:
             {
                 if (string.IsNullOrEmpty(txt))

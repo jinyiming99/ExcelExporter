@@ -18,4 +18,5 @@ public enum DataType
     Double,
     String,
     Bool,
+    Struct,
 }
