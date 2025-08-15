@@ -1,5 +1,6 @@
 ﻿using ConsoleApp1;
 using ConsoleApp1.NewDatas;
+using GameFrameWork.DebugTools;
 using NPOI.XSSF.UserModel;
 public class ExcelFile
 {
@@ -19,7 +20,11 @@ public class ExcelFile
           {
                ExcelClassData data = new ExcelClassData();
                var name = Workbook.GetSheetName(i);
-               var classData = ClassLoader.LoadClass(Workbook.GetSheet(name));
+               DebugHelper.Log($"sheet name = {name}");
+               var isheet = Workbook.GetSheet(name);
+               if (isheet == null)
+                    continue;
+               var classData = ClassLoader.LoadClass(isheet);
                compilationsData.Add(name,classData);
           }
 

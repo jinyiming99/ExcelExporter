@@ -1,4 +1,4 @@
-﻿namespace ConsoleApp1.NewDatas;
+﻿﻿namespace ConsoleApp1.NewDatas;
 
 public class FieldSturctValue: BaseValue
 { 

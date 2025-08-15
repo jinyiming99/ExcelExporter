@@ -10,8 +10,15 @@ public static class ExportToFileHelper
             return;
         string filePath = outPath + "/" + data._name + ".cs";
         var steam = System.IO.File.CreateText(filePath);
+        await steam.WriteLineAsync($"using System.Collections.Generic;");
+        await steam.WriteLineAsync($"using System;");
+        
         steam.WriteLineAsync($"namespace {spaceName}");
         steam.WriteLineAsync("{");
+
+        
+        await steam.WriteLineAsync($"public class {data._name.ToUpperFirst()}");
+        await steam.WriteLineAsync("{");
         foreach (var field in data._Datas)
         {
             string str = await field.Value.ClassStr();
@@ -19,10 +26,6 @@ public static class ExportToFileHelper
                 continue;
             await steam.WriteLineAsync($"    {str}");
         }
-        
-        await steam.WriteLineAsync($"public class {data._name.ToUpperFirst()}");
-        await steam.WriteLineAsync("{");
-
 
         
         foreach (var field in data._Datas)
@@ -30,6 +33,8 @@ public static class ExportToFileHelper
             string str = await ExportDataFile(field.Value); 
             await steam.WriteLineAsync($"   {str}");
         }
+        
+
         
         await steam.WriteLineAsync("}");
         await steam.WriteLineAsync("}");
@@ -43,6 +48,7 @@ public static class ExportToFileHelper
             return;
         string filePath = outPath + "/" + data._name.ToUpperFirst() + "Data.cs";
         var steam = System.IO.File.CreateText(filePath);
+        await steam.WriteLineAsync($"using System.Collections.Generic;");
         await steam.WriteLineAsync($"namespace {spaceName}");
         await steam.WriteLineAsync("{");
         await steam.WriteLineAsync($"public class {data._name.ToUpperFirst()}Data");

@@ -23,6 +23,7 @@ public abstract class ConfigFile
             }
             if (!file.SetData(lines))
                 return null;
+            file.CheckData();
         }
         return file;
     }
@@ -42,7 +43,8 @@ public abstract class ConfigFile
         foreach (var arg in args)
         {
             var arr = arg.Split('=');
-            if (arr.Length != 2 || string.IsNullOrEmpty(arr[1]))
+            ///设置数据不应该做单独的数据有效性判断，应该在外面判断
+            if (arr.Length != 2 )//|| string.IsNullOrEmpty(arr[1]))
             {
                 if (string.IsNullOrEmpty(arr[1]))
                     DebugHelper.LogError($"${arr[0]} config is empty");

@@ -9,25 +9,31 @@ public class GlobalConfig : ConfigFile
     public string _nameSpace = string.Empty;
     protected override void CheckData()
     {
-        if (_dic.TryGetValue("inPath", out _inPath) == false)
+        if (!_dic.TryGetValue("inPath", out _inPath) || string.IsNullOrEmpty(_inPath))
         {
             _inPath = Directory.GetCurrentDirectory();
         } 
         
-        if (_dic.TryGetValue("outPath", out _outPath) == false)
+        if (!_dic.TryGetValue("outPath", out _outPath) || string.IsNullOrEmpty(_outPath))
         {
             _outPath = Directory.GetCurrentDirectory();
         } 
         if (_dic.TryGetValue("isClient", out var client))
         {
-            _isClient = bool.Parse(client);
+            if (!bool.TryParse(client, out _isClient))
+            {
+                _isClient = true;
+            }
         } 
         
         if (_dic.TryGetValue("isServer", out var server))
         {
-            _isServer = bool.Parse(server);
+            if (!bool.TryParse(server, out _isServer))
+            {
+                _isServer = false;
+            }
         } 
-        if (_dic.TryGetValue("nameSpace", out _nameSpace) == false)
+        if (!_dic.TryGetValue("nameSpace", out _nameSpace) || string.IsNullOrEmpty(_nameSpace))
         {
             _nameSpace = "Config";
         } 

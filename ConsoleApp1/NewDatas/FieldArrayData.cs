@@ -6,10 +6,12 @@ public class FieldArrayData : BaseValue
     private bool _isMultiType;
 
     private int _index;
-    public FieldArrayData(CellData typeData,string name):base(FieldType.Array,DataType.Null,name)
+    private string _className;
+    public FieldArrayData(CellData typeData,string name,string className):base(FieldType.Array,DataType.Null,name)
     {
+        _className = className;
         var type = typeData.Txt.Replace("[]", "");
-        //{a:int,b:string}[]
+        // 格式{a:int,b:string}[]
         if (type.Contains('{'))
         {
             type = type.Replace("{", "");
@@ -27,7 +29,7 @@ public class FieldArrayData : BaseValue
             _isMultiType = true;
         }
         else
-        {
+        { // 格式 int[]
             _dataType = FieldSturctValue.GetStruct(type);
             _values = new List<FieldSturctValue>();
             _values.Add(new FieldSturctValue(_dataType,string.Empty));
@@ -61,7 +63,7 @@ public class FieldArrayData : BaseValue
     {
         if (_isMultiType)
         {
-            return $"public List<CustomAttr{_index}> {_name.ToUpperFirst()};";
+            return $"public List<{_className}.CustomAttr{_index}> {_name.ToUpperFirst()};";
         }
         else
         {
@@ -74,7 +76,7 @@ public class FieldArrayData : BaseValue
         if (_isMultiType)
         {
             StringWriter writer = new StringWriter();
-            await writer.WriteAsync($"{_name} = new List<CustomAttr{_index}>" + "{");
+            await writer.WriteAsync($"{_name} = new List<{_className}.CustomAttr{_index}>" + "{");
             //1,a:2,b
             //foreach (var kv in _CellDatas)
             {
@@ -84,7 +86,7 @@ public class FieldArrayData : BaseValue
                 {
                     if (i != 0)
                         await writer.WriteAsync(",");
-                    await writer.WriteAsync($"new CustomAttr{_index}"+"{");
+                    await writer.WriteAsync($"new {_className}.CustomAttr{_index}"+"{");
                     var values = arrs[i].Split(",");
                     for (int index1 = 0; index1 < values.Length; index1++)
                     {

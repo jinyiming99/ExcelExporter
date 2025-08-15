@@ -2,7 +2,7 @@
 
 public static class FieldDataCreater
 {
-    public static FieldData Creater(ExcelFieldData excelData)
+    public static FieldData Creater(ExcelFieldData excelData, string className)
     {
         if (excelData == null)
             return null;
@@ -14,7 +14,7 @@ public static class FieldDataCreater
             data._isKey = IsKey(excelData._info.Key);
             data._name = excelData._info.Name.Txt;
             data._des = excelData._info.Des.Txt;
-            data._value = CreateValue(excelData._info,excelData._datas);
+            data._value = CreateValue(excelData._info,excelData._datas,className);
             return data;
         }
         else
@@ -23,7 +23,7 @@ public static class FieldDataCreater
         }
     }
 
-    private static BaseValue CreateValue(FieldCellInfo info,Dictionary<int, CellData> cellDatas)
+    private static BaseValue CreateValue(FieldCellInfo info,Dictionary<int, CellData> cellDatas,string className)
     {
         string type = info.Type.Txt.ToLower();
         BaseValue outData = null;
@@ -33,11 +33,11 @@ public static class FieldDataCreater
             var name = strs.Where(str => !str.Contains("enum") && !string.IsNullOrEmpty(str)).ToArray();
             outData= new FieldEnumValue(name[0],info.Name.Txt);
         }
-        else if (type.Contains("[]"))
+        else if (type.Contains("[]"))///判断是否是数组
         {
-            outData= new FieldArrayData(info.Type,info.Name.Txt);
+            outData= new FieldArrayData(info.Type,info.Name.Txt ,className);
         }
-        else if (FieldSturctValue.IsStruct(info.Type))
+        else if (FieldSturctValue.IsStruct(info.Type))//判断是否是结构体
         {
             outData= new FieldSturctValue(FieldSturctValue.GetStruct(info.Type.Txt),info.Name.Txt);
         }

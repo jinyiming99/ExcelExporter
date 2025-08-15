@@ -33,15 +33,16 @@ foreach (string file in files)
 }
 
 var dic = Check(excelData);
-
-foreach (var v in dic)
+if (dic != null)
 {
-    await ExportToFileHelper.ExportStructFile(config._outPath,config._nameSpace,v.Value);
-    await ExportToFileHelper.ExportDataFile(config._outPath,config._nameSpace,v.Value);
+    foreach (var v in dic)
+    {
+        await ExportToFileHelper.ExportStructFile(config._outPath, config._nameSpace, v.Value);
+        await ExportToFileHelper.ExportDataFile(config._outPath, config._nameSpace, v.Value);
+    }
 }
 
-
-Console.WriteLine("work done!");
+DebugHelper.Log("work done!");
 
 Dictionary<string,ClassData> Check(ExcelData data)
 {
@@ -53,7 +54,7 @@ Dictionary<string,ClassData> Check(ExcelData data)
         classData._name = classInfo.Key.Split("%")[0];
         foreach (var fieldInfo in classInfo.Value._fields)
         {
-            var fieldData = FieldDataCreater.Creater(fieldInfo);
+            var fieldData = FieldDataCreater.Creater(fieldInfo,classData._name);
             if (fieldData == null)
             {
                 Console.WriteLine($"field is null {fieldInfo._info.Des.Txt}");
